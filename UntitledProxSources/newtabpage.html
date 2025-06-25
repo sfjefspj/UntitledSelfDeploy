@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>New Tab</title>
+<link href="https://fonts.googleapis.com/css2?family=Segoe+UI&display=swap" rel="stylesheet" />
+<style>
+  html, body {
+    margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden;
+    background: radial-gradient(circle at 50% 120%, #2449ff 0%, #0a0a1a 80%);
+    color: white;
+    font-family: 'Segoe UI', sans-serif;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+  h1 {
+    font-size: 25px;
+    margin-bottom: 20px;
+    text-shadow: 0 0 5px rgba(85, 115, 255, 0.4);
+  }
+  p {
+    color: #ccc;
+    font-size: 16px;
+    margin-bottom: 30px;
+  }
+  form {
+    width: 80%;
+    max-width: 600px;
+    position: relative;
+  }
+  input[type="text"] {
+    width: 100%;
+    padding: 12px 45px 12px 20px;
+    font-size: 16px;
+    border-radius: 25px;
+    border: none;
+    outline: none;
+    box-sizing: border-box;
+    box-shadow: 0 0 8px rgba(36, 73, 255, 0.8);
+    background: #101026;
+    color: white;
+    transition: box-shadow 0.3s ease;
+  }
+  input[type="text"]:focus {
+    box-shadow: 0 0 12px #6a8fff;
+  }
+
+  button.search-button {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 32px;
+    background: #2449ff;
+    border: none;
+    border-radius: 50%;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 8px rgba(36, 73, 255, 0.8);
+    cursor: pointer;
+    transition: box-shadow 0.3s ease;
+  }
+
+  button.search-button:hover {
+    animation: pulse 1s infinite;
+  }
+
+  @keyframes pulse {
+    0% {
+      box-shadow: 0 0 8px rgba(36, 73, 255, 0.8);
+    }
+    50% {
+      box-shadow: 0 0 15px rgba(36, 73, 255, 1);
+    }
+    100% {
+      box-shadow: 0 0 8px rgba(36, 73, 255, 0.8);
+    }
+  }
+
+  button.search-button svg {
+    width: 16px;
+    height: 16px;
+    fill: white;
+  }
+
+  body::after {
+    content: '';
+    position: absolute;
+    bottom: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 350px;
+    height: 160px;
+    background: radial-gradient(ellipse at center, rgba(36, 73, 255, 0.4), transparent 70%);
+    filter: blur(60px);
+    z-index: 0;
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+  <h1>Untitled 2.0 built-in Browser</h1>
+  <p>Enter a URL or search term above to get started</p>
+
+  <form id="searchForm">
+    <input id="searchInput" type="text" placeholder="Enter URL or search term" autocomplete="off" />
+    <button type="submit" class="search-button" title="Search">
+      <svg viewBox="0 0 24 24">
+        <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5
+                 6.5 6.5 0 109.5 16a6.471 6.471 0 004.23-1.57l.27.28v.79l5 
+                 4.99L20.49 19l-4.99-5zM10 14a4 4 0 110-8 4 4 0 010 8z"/>
+      </svg>
+    </button>
+  </form>
+
+  <script>
+    const form = document.getElementById('searchForm');
+    const input = document.getElementById('searchInput');
+
+    form.addEventListener('submit', event => {
+      event.preventDefault();
+      const rawInput = input.value.trim();
+      if (!rawInput) return;
+
+      window.parent.postMessage(
+        { action: 'navigate', url: rawInput },
+        window.origin
+      );
+    });
+  </script>
+</body>
+</html>

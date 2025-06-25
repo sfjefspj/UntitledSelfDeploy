@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⠀</title>
+    <link rel="icon" type="image/png" href="https://upload.wikimedia.org/wikipedia/commons/5/59/Empty.png">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="toolbar">
+        <div class="nav-buttons">
+            <button id="backBtn" class="nav-button" title="Back">←</button>
+            <button id="forwardBtn" class="nav-button" title="Forward">→</button>
+            <button id="refreshBtn" class="nav-button" title="Refresh">↻</button>
+        </div>
+        <div class="address-bar">
+            <input type="text" id="addressBar" placeholder="Enter URL or search term">
+        </div>
+        <button id="goBtn" class="nav-button" title="Go">Go</button>
+        <button id="fullscreenBtn" class="nav-button" title="Toggle Fullscreen">⛶</button>
+    </div>
+<button id="exitFullscreenBtn" style="
+    display: none;
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 10000;
+    background: #222;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 18px;
+">✕</button>
+
+    <div class="tab-bar">
+        <div class="tabs-container" id="tabsContainer">
+            <!-- Tabs will be added here -->
+        </div>
+        <button id="newTabBtn" class="new-tab" title="New Tab">+</button>
+    </div>
+
+    <div class="webview-container" id="webviewContainer">
+        <!-- Webviews will be added here -->
+        <div class="loading-indicator" id="loadingIndicator">
+            <div class="spinner"></div>
+        </div>
+    </div>
+
+    <div class="status-bar" id="statusBar">
+        Ready
+    </div>
+    
+    <div style="
+    position: fixed;
+    bottom: 32.75px;
+    right: 8.75px;
+    width: 47px;
+    height: 47px;
+    background: transparent;
+    border-radius: 50%;
+    z-index: 999999;
+    pointer-events: auto;
+    "></div>
+    
+    <script src="proxworker.js"></script>
+
+</body>
+</html>
