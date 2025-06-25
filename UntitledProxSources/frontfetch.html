@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading...</title>
+    <link id="dynamic-favicon" rel="icon" href="data:," type="image/x-icon">
+    <style>
+        html, body, #sandbox { margin: 0; padding: 0; width: 100vw; height: 100vh; border: none; position: absolute; top: 0; left: 0; }
+    </style>
+</head>
+<body>
+    <iframe id="sandbox"></iframe>
+
+    <script>
+       const files = [
+    { url: "https://raw.githubusercontent.com/sfjefspj/UntitledSelfDeploy/refs/heads/main/UntitledProxSources/index.html", name: "index.html" },
+    { url: "https://raw.githubusercontent.com/sfjefspj/UntitledSelfDeploy/refs/heads/main/UntitledProxSources/newtabpage.html", name: "newtabpage.html" },
+    { url: "https://raw.githubusercontent.com/sfjefspj/UntitledSelfDeploy/refs/heads/main/UntitledProxSources/style.css", name: "style.css" },
+    { url: "https://raw.githubusercontent.com/sfjefspj/UntitledSelfDeploy/refs/heads/main/UntitledProxSources/proxworker.js", name: "proxworker.js" }
+];
+
+let virtualFS = {}, blobURLs = {};
+
+async function fetchFiles() {
+    await Promise.all(files.map(async ({ url, name }) => {
+        try {
+            virtualFS[name] = await (await fetch(url)).text();
+        } catch (err) {
+            console.error(`Failed to fetch ${name}:`, err);
+        }
+    }));
+    createBlobURLs();
+    updateOuterPage();
+    runVirtualSite();
+}
+
+function createBlobURLs() {
+    Object.entries(virtualFS).forEach(([file, content]) => {
+        blobURLs[file] = URL.createObjectURL(new Blob([content], { type: getMimeType(file) }));
+    });
+}
+
+function getMimeType(filename) {
+    return filename.endsWith(".html") ? "text/html" :
+           filename.endsWith(".css") ? "text/css" :
+           filename.endsWith(".js") ? "application/javascript" : "text/plain";
+}
+
+function rewriteHTML(html) {
+    return html
+        .replace(/(<link\s+rel=["']stylesheet["']\s+href=["'])([^"']+)(["'])/g,
+            (_, start, href, end) => blobURLs[href] ? `${start}${blobURLs[href]}${end}` : _)
+        .replace(/(<script\s+src=["'])([^"']+)(["']\s*><\/script>)/g,
+            (_, start, src, end) => blobURLs[src] ? `${start}${blobURLs[src]}${end}` : _);
+}
+
+function updateOuterPage() {
+    let doc = new DOMParser().parseFromString(virtualFS["index.html"], "text/html");
+    document.title = doc.querySelector("title")?.textContent || "Loading...";
+    document.getElementById("dynamic-favicon").href =
+        doc.querySelector("link[rel='icon']")?.href || "data:,";
+}
+
+function runVirtualSite() {
+    let iframe = document.getElementById("sandbox");
+    iframe.srcdoc = virtualFS["index.html"]
+        ? rewriteHTML(virtualFS["index.html"])
+        : "<h1>Error: index.html not found</h1>";
+}
+
+fetchFiles();
+
+    </script>
+</body>
+</html>
