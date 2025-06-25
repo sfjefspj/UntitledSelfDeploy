@@ -1,2 +1,3 @@
 # UntitledSelfDeploy
 Join our discord: https://discord.gg/w5wuR6mjz2
+All instructions on our discord...
